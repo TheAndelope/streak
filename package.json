@@ -2,11 +2,6 @@
   "name": "notion-streak-widget",
   "version": "1.0.0",
   "description": "A simple widget to display Notion database streak",
-  "main": "api/index.js",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'No build step required'"
-  },
   "dependencies": {
     "@notionhq/client": "^2.2.13"
   },
