@@ -115,7 +115,6 @@ const htmlTemplate = `
     <div class="streak-widget">
         <div class="streak-number">{{STREAK}}</div>
         <div class="streak-label">day streak</div>
-        <div class="last-updated">Updated: {{TIME}}</div>
     </div>
 </body>
 </html>
