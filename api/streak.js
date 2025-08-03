@@ -33,11 +33,31 @@ async function calculateStreak() {
         let streak = 0;
         
         for (const row of rows) {
-            const status = row.properties["On Track?"]?.select?.name?.toLowerCase();
-            if (status === "yes") {
+            const props = row.properties;
+            const onTrackProp = props["On Track?"];
+            
+            if (!onTrackProp) {
+                continue;
+            }
+            
+            let onTrack = false;
+            
+            // Handle different property types like the Python code
+            if (onTrackProp.checkbox !== undefined) {
+                onTrack = onTrackProp.checkbox;
+            } else if (onTrackProp.select && onTrackProp.select) {
+                onTrack = onTrackProp.select.name.toLowerCase() === "yes";
+            } else if (onTrackProp.formula && onTrackProp.formula) {
+                const formulaResult = onTrackProp.formula;
+                if (formulaResult.string && formulaResult.string) {
+                    onTrack = formulaResult.string.toLowerCase() === "yes";
+                }
+            }
+            
+            if (onTrack) {
                 streak++;
             } else {
-                break;
+                break; // Stop counting when we hit a day that's not on track
             }
         }
         
@@ -56,7 +76,7 @@ module.exports = async (req, res) => {
     try {
         // Check environment variables
         if (!process.env.NOTION_TOKEN || !process.env.DATABASE_ID) {
-            return res.status(500).json({ error: 'Missing environment variables' });
+            return res.status(500).json({ error: 'Missing environment variables: NOTION_TOKEN and DATABASE_ID required' });
         }
         
         const streak = await calculateStreak();
